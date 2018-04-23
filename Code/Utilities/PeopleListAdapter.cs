@@ -7,22 +7,31 @@ using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
+using Android.Views.InputMethods;
 using Android.Widget;
+
 
 namespace ProjectPlannerApp.Code.Utilities
 {
-	class PeopleListAdapter : BaseAdapter
+	class PeopleListAdapter : BaseAdapter, View.IOnKeyListener
 	{
 
-		Context context;
-		private readonly List<PeopleListItem> listItems;
-		private IListModifier _peopleWidgetPopUp;
+		public ImageView ImageView { get; private set; }
 
-		public PeopleListAdapter(Context context, IListModifier peopleWidgetPopUp)
+		private Context context;
+		private int _keyCounter = 0;
+		private InputMethodManager imm;
+
+
+		private IListModifier _peopleWidgetPopUp = Utility.GetUtility().WidgetPopUp;
+
+		public PeopleListAdapter(Context context)
 		{
 			this.context = context;
-			_peopleWidgetPopUp = peopleWidgetPopUp;
+		    imm = (InputMethodManager)context.GetSystemService(Context.InputMethodService);
+
 		}
 
 		
@@ -38,7 +47,9 @@ namespace ProjectPlannerApp.Code.Utilities
 
 		public override View GetView(int position, View convertView, ViewGroup parent)
 		{
-			PeopleListItem peopleListItem = _peopleWidgetPopUp.GetPeopleListItem(position);
+			Log.Info("getview", "GetView called");
+			PeopleListItem peopleListItem = (PeopleListItem) _peopleWidgetPopUp.
+				GetListItem(position);
 			var view = convertView;
 			PeopleListAdapterViewHolder holder = null;
 
@@ -57,7 +68,9 @@ namespace ProjectPlannerApp.Code.Utilities
 				holder.Email = view.FindViewById<EditText>(Resource.Id.email);
 				holder.Telephone = view.FindViewById<EditText>(Resource.Id.telephone);
 				holder.Role = view.FindViewById<EditText>(Resource.Id.role);
+				holder.ImageView = view.FindViewById<ImageView>(Resource.Id.imageView);
 				view.Tag = holder;
+				SetViewFunctionality(holder,position);
 			}
 
 
@@ -82,13 +95,89 @@ namespace ProjectPlannerApp.Code.Utilities
 			return view;
 		}
 
+		private void SetViewFunctionality(PeopleListAdapterViewHolder holder,int position)
+		{
+			holder.Name.SetOnKeyListener(this);
+			holder.Email.SetOnKeyListener(this);
+			holder.Telephone.SetOnKeyListener(this);
+			holder.Role.SetOnKeyListener(this);
+
+			holder.ImageView.Click += OnImageViewClick;
+
+			holder.Name.SetTag(Resource.Id.addPerson, (Java.Lang.Object) "name");
+			holder.Email.SetTag(Resource.Id.addPerson, (Java.Lang.Object)"email");
+			holder.Telephone.SetTag(Resource.Id.addPerson, (Java.Lang.Object) "telephone");
+			holder.Role.SetTag(Resource.Id.addPerson, (Java.Lang.Object) "role");
+		
+
+			holder.Name.SetTag(Resource.Id.backgroundLayout, position);
+			holder.Email.SetTag(Resource.Id.backgroundLayout, position);
+			holder.Telephone.SetTag(Resource.Id.backgroundLayout, position);
+			holder.Role.SetTag(Resource.Id.backgroundLayout, position);
+		}
+
+
+		public bool OnKey(View v, [GeneratedEnum] Keycode keyCode, KeyEvent e)
+		{
+			_keyCounter++;
+			
+
+			if (keyCode == Keycode.Enter && _keyCounter%2!=0)
+			{
+				EditText et = (EditText)v;
+				CheckTag(et);
+				imm.HideSoftInputFromWindow(v.WindowToken, 0);
+			}
+
+			return false;
+		
+		}
+
+		private void CheckTag(EditText et)
+		{
+			PeopleListItem peopleListItem = (PeopleListItem)_peopleWidgetPopUp.
+						GetListItem((int)et.GetTag(Resource.Id.backgroundLayout));
+			string textInput = et.Text.ToString();
+
+			switch ((string)et.GetTag(Resource.Id.addPerson))
+			{
+				case "name":
+					peopleListItem.Name = textInput;
+					break;
+				case "email":
+					peopleListItem.Email = textInput;
+					break;
+				case "telephone":
+					peopleListItem.Telephone = textInput;
+					break;
+				case "role":
+					peopleListItem.RoleDescription = textInput;
+					break;
+
+
+			}
+		}
+
+
 		//Fill in cound here, currently 0
 		public override int Count
 		{
 			get
 			{
-				return 0;
+				return _peopleWidgetPopUp.GetListCount();
 			}
+		}
+
+		public void OnImageViewClick(object o, EventArgs e)
+		{
+			//set image from gallery 
+			ImageView imageView = (ImageView)o;
+			ImageView = imageView;
+			var imageIntent = new Intent();
+			imageIntent.SetType("image/*");
+			imageIntent.SetAction(Intent.ActionGetContent);
+			((Activity)context).StartActivityForResult(
+				Intent.CreateChooser(imageIntent, "Select photo"), 0);
 		}
 
 	}

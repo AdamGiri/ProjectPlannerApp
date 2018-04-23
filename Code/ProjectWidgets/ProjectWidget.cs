@@ -9,31 +9,25 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using System.Numerics;
+using Android.Graphics;
+using ProjectPlannerApp.Code.Utilities;
 
 namespace ProjectPlannerApp
 {
-	class ProjectWidget : ProjectObject, IProjectWidget
+	class ProjectWidget : ProjectObject
 	{
-		private readonly List<IWidget> _widgets = new List<IWidget>();
 
-		public ProjectWidget(Context context) : base(context)
+
+		public ProjectWidget(Context context, Vector2 coordinates, int xmlId, ViewGroup viewGroup,
+			Color color)
+			: base(context, coordinates,xmlId, viewGroup, color)
 		{
+			
 		}
 
-		public void AddWidget(IWidget widget)
-		{
-			_widgets.Add(widget);
-		}
+		
 
-		public List<IWidget> GetWidgets()
-		{
-				return _widgets;
-		}
 
-		public void RemoveWidget(int i)
-		{
-			if (_widgets.Count > 0)
-				_widgets.RemoveAt(i);
-		}
 	}
 }

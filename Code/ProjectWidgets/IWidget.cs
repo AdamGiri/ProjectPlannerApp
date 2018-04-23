@@ -14,6 +14,7 @@ namespace ProjectPlannerApp
 {
 	public interface IWidget
 	{
-		 void OnClickWidget();
+		void OnClickWidget(object o, EventArgs e);
+		void OnLongClickWidget(object o, EventArgs e);
 	}
 }

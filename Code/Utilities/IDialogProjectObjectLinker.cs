@@ -10,10 +10,10 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace ProjectPlannerApp
+namespace ProjectPlannerApp.Code.Utilities
 {
-	interface IPopUp
+	interface IDialogProjectObjectLinker
 	{
-		void PopUp();
+		void LinkProjectObjectToDialog(ProjectObject projectObject);
 	}
 }

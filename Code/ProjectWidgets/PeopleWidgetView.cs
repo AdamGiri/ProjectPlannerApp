@@ -10,22 +10,20 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace ProjectPlannerApp.Code.Utilities
+namespace ProjectPlannerApp.Code.ProjectWidgets
 {
-	class Utility
+	class PeopleWidgetView : IWidgetView
 	{
-		public static Utility _instance = new Utility();
-		public IListModifier WidgetPopUp {  get; set; }
+		private readonly Context context;
 
-
-		private Utility()
+		public PeopleWidgetView(Context context)
 		{
-			
+			this.context = context;
 		}
 
-		public static Utility GetUtility()
+		public void InflateWidget()
 		{
-			return _instance;
+			
 		}
 	}
 }

@@ -13,23 +13,21 @@ using Android.Graphics;
 using ProjectPlannerApp.Code.Utilities;
 using ProjectPlannerApp.Code.ProjectWidgets;
 
-namespace ProjectPlannerApp
+namespace ProjectPlannerApp.Code.ProjectWidgets
 {
-	class PeopleWidget : Widget, IWidget
+	class TravelWidget : Widget, IWidget
 	{
-
-		public static string  title = "People";
-		public static Color  color = Color.Green;
+		private static string title = "Travel";
+		private static Color color = Color.Blue;
 		private readonly ProjectObject _projectWidget;
 
-		public PeopleWidget(ProjectObject projectWidget, IPopUp peopleWidgetPopUp, IDialog dialog) : 
-			base(projectWidget, peopleWidgetPopUp, dialog)
+		public TravelWidget(ProjectObject projectWidget, IPopUp widgetPopUp, IDialog dialog)
+			: base(projectWidget, widgetPopUp, dialog)
 		{
 			_projectWidget = projectWidget;
 		}
 
-
-		public override  void DesignWidget()
+		public override void DesignWidget()
 		{
 			TextView tv = (TextView)_projectWidget.View.
 				FindViewById<TextView>(Resource.Id.widget);
@@ -45,7 +43,5 @@ namespace ProjectPlannerApp
 
 
 		}
-
-
 	}
 }

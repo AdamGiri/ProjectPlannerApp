@@ -10,15 +10,17 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.Util;
+using ProjectPlannerApp.Code.Utilities;
 
 
 namespace ProjectPlannerApp
 {
-	[Activity(Label = "PlannerActivity")]
+	[Activity(Label = "Planner")]
 	public class PlannerActivity : Activity
 	{
 		private RelativeLayout _backgroundLayout;
-		private ProjectPlannerApp.Code.Utilities.ProjectPlannerTouchListener touchListener;
+		private ProjectPlannerTouchListener touchListener;
+		private WidgetMenu widgetMenu;
 
 		protected override void OnCreate(Bundle savedInstanceState)
 		{
@@ -26,14 +28,14 @@ namespace ProjectPlannerApp
 			SetContentView(Resource.Layout.ProjectPlanner);
 
 			_backgroundLayout = 	FindViewById<RelativeLayout>(Resource.Id.backgroundLayout);
-			touchListener = new ProjectPlannerApp.Code.Utilities.ProjectPlannerTouchListener();
+			touchListener = new ProjectPlannerTouchListener();
 			_backgroundLayout.SetOnTouchListener(touchListener);
 			_backgroundLayout.LongClick += ShowPopUpMenu;
 		}
 
 		public void ShowPopUpMenu(object o, EventArgs e)
 		{
-			var widgetMenu = new ProjectPlannerApp.Code.Utilities.WidgetMenu(touchListener, 
+			widgetMenu = new WidgetMenu(touchListener, 
 				this)
 			{
 				BackgroundLayout = _backgroundLayout

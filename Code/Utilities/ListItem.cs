@@ -10,10 +10,9 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace ProjectPlannerApp
+namespace ProjectPlannerApp.Code.Utilities
 {
-	interface IPopUp
+	public class ListItem
 	{
-		void PopUp();
 	}
 }

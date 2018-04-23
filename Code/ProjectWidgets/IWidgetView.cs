@@ -10,10 +10,10 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
-namespace ProjectPlannerApp
+namespace ProjectPlannerApp.Code.ProjectWidgets
 {
-	interface IPopUp
+	interface IWidgetView
 	{
-		void PopUp();
+		void InflateWidget();
 	}
 }

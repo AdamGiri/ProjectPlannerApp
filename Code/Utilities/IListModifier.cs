@@ -14,7 +14,8 @@ namespace ProjectPlannerApp.Code.Utilities
 {
 	interface IListModifier
 	{
-		void AddToList(PeopleListItem peopleListItem);
-		PeopleListItem GetPeopleListItem(int i);
+		void AddToList(ListItem peopleListItem);
+		ListItem GetListItem(int i);
+		int GetListCount();
 	}
 }

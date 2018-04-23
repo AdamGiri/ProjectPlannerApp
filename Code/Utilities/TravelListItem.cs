@@ -9,24 +9,21 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Android.Graphics;
-
 
 namespace ProjectPlannerApp.Code.Utilities
 {
-	public class PeopleListItem : ListItem
+	class TravelListItem : ListItem
 	{
-		public Bitmap Bitmap { get; set; }
-		public string Name { get; set; }
-		public string Email { get; set; }
-		public string Telephone { get; set; }
-		public string RoleDescription { get; set; }
+		public string Location { get; set; }
+		public string Postcode { get; set; }
+		public string TeleNumber { get; set; }
+		public string Reason { get; set; }
 
-		public PeopleListItem( )
+		public TravelListItem()
 		{
 			
 		}
 
-		
+
 	}
 }

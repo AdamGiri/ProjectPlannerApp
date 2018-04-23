@@ -14,25 +14,18 @@ using ProjectPlannerApp.Code.Activities;
 
 namespace ProjectPlannerApp
 {
-	public class PeopleWidgetPopUp : View, IPopUp, IListModifier
+	public class PeopleWidgetPopUp :  IPopUp, IListModifier
 	{
 		private Context _context;
-		private readonly List<PeopleListItem> _peopleListItems = new List<PeopleListItem>();
+		private readonly List<ListItem> _peopleListItems = new List<ListItem>();
 		
 
-		public PeopleWidgetPopUp(Context context) : base(context)
+		public PeopleWidgetPopUp(Context context) 
 		{
 			_context = context;
-			CreatePopUp();
 		}
 
-		public void CreatePopUp()
-		{
 
-			var inflater = LayoutInflater.From(_context);
-			//create xml layout and then inflate.
-
-		}
 
 		public void PopUp()
 		{
@@ -40,16 +33,16 @@ namespace ProjectPlannerApp
 			System.Type peopleListActivity = typeof(
 				PeopleListActivity);
 
-			Utility.GetUtility().PeopleWidgetPopUp = this;
+			Utility.GetUtility().WidgetPopUp = this;
 
 			var intent = new Intent(_context, peopleListActivity);
-			Context.StartActivity(intent);
+			_context.StartActivity(intent);
 
 	
 
 		}
 
-		public void AddToList(PeopleListItem peopleListItem)
+		public void AddToList(ListItem peopleListItem)
 		{
 			if (peopleListItem == null)
 				throw new InvalidOperationException("PeopleListItem is null");
@@ -57,12 +50,17 @@ namespace ProjectPlannerApp
 			_peopleListItems.Add(peopleListItem);
 		}
 
-		public PeopleListItem GetPeopleListItem(int i)
+		public ListItem GetListItem(int i)
 		{
 			if (i < 0 || i > _peopleListItems.Count)
 				throw new InvalidOperationException("index is out of range");
 
 			return _peopleListItems[i];
+		}
+
+		public int GetListCount()
+		{
+			return _peopleListItems.Count;
 		}
 	}
 }

@@ -11,6 +11,8 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using System.Threading;
+using System.Numerics;
+using ProjectPlannerApp.Code.Utilities;
 
 namespace ProjectPlannerApp.Code.Utilities
 {
@@ -24,12 +26,12 @@ namespace ProjectPlannerApp.Code.Utilities
 		private MenuAdapter _arrayAdapter;
 		private ListView _listView;
 		private TextView _menuItem;
+		private AlertDialog dialog;
 
 
 		public RelativeLayout BackgroundLayout { get; set; }
 
-		public WidgetMenu(ProjectPlannerApp.Code.Utilities.
-			ProjectPlannerTouchListener touchListener, Context context )
+		public WidgetMenu(ProjectPlannerTouchListener touchListener, Context context )
 		{
 			if (touchListener == null)
 				throw new InvalidOperationException("Touch listener is null");
@@ -54,8 +56,14 @@ namespace ProjectPlannerApp.Code.Utilities
 		{
 			if (_popUp == null)
 			{
-				_popUp = _layoutInflater.Inflate(Resource.Layout.popuplayout, BackgroundLayout);
+				AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(context);
+				_popUp = _layoutInflater.Inflate(Resource.Layout.popuplayout,null);
 				PopulateListView();
+				dialogBuilder.SetView(_popUp);
+				dialog = dialogBuilder.Create();
+				dialog.Show();
+				dialog.Window.SetLayout(500, 475);
+
 			} else
 			{
 				_popUp.Visibility = ViewStates.Visible;
@@ -65,8 +73,6 @@ namespace ProjectPlannerApp.Code.Utilities
 			if (_popUp == null)
 				throw new InvalidOperationException("view menu is null");
 
-			_popUp.SetX(touchListener.X);
-			_popUp.SetY(touchListener.Y);
 		}
 
 		void PopulateListView()
@@ -75,11 +81,9 @@ namespace ProjectPlannerApp.Code.Utilities
 			
 			_listView = _popUp.FindViewById<ListView>(Resource.Id.widgetSelector);
 			_menuItem = _popUp.FindViewById<TextView>(Resource.Id.widgetTextView);
+			
 
-			if (_listView == null)
-				throw new InvalidOperationException("Listview is null");
-
-			_listView.SetAdapter(_arrayAdapter);
+			_listView.Adapter =_arrayAdapter;
 			_listView.ItemClick += SelectItem;
 
 		
@@ -91,19 +95,29 @@ namespace ProjectPlannerApp.Code.Utilities
 			var itemSelected = (TextView) _arrayAdapter.GetViewItem(itemEventArgs.Position).
 				GetTag(Resource.Id.widgetTextView);
 			itemSelected.SetBackgroundColor(Android.Graphics.Color.Green);
-			//remove the widget menu when closing the popup.
-
+			dialog.Dismiss();
+			
 			switch (itemEventArgs.Position) {
 				
 				case 0:
 					//create people widget
-					PeopleWidget peopleWidget = new PeopleWidget(new ProjectWidget(context),
-						new PeopleWidgetPopUp(context));
-					peopleWidget.OnClickWidget();
+					var dialog = new Dialog(context);
+					var widgetDeleteDialog = new WidgetDeleteDialog(dialog);
+					var projWidget = new ProjectWidget(context,new Vector2(touchListener.X, 
+						touchListener.Y),Resource.Layout.widgetview, BackgroundLayout,
+						PeopleWidget.GetColor());
+					var peopleWidget = new PeopleWidget(projWidget, new PeopleWidgetPopUp(context),
+						widgetDeleteDialog);
+					break;
+				case 1:
+					//create travel widget
+
 					break;
 			}
 		}
 
 		
+
+
 	}
 }
